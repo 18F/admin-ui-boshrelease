@@ -17,12 +17,13 @@ JOB_NAME=$1
 output_label=${2:-${JOB_NAME}}
 
 export JOB_DIR=/var/vcap/jobs/$JOB_NAME
+export PACKAGE_DIR=/var/vcap/packages/$JOB_NAME
 chmod 755 $JOB_DIR # to access file via symlink
 
 source $JOB_DIR/helpers/ctl_utils.sh
 
-# Add all packages' /bin & /sbin into $PATH
-for package_bin_dir in $(ls -d /var/vcap/packages/*/*bin)
+# Add bin directories from admin_ui and vcap-common
+for package_bin_dir in $(ls -d ${PACKAGE_DIR}/*/bin)
 do
   export PATH=${package_bin_dir}:$PATH
 done
